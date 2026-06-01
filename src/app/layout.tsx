@@ -1,8 +1,7 @@
+// app/layout.tsx
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -31,12 +30,9 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${playfair.variable} ${dmSans.variable} h-full antialiased`}
+      style={{ colorScheme: "light only" }}
     >
-      <body className="min-h-full flex flex-col bg-[#FFFAF8] text-[#2C1810]">
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
-      </body>
+      <body className="min-h-full h-full">{children}</body>
     </html>
   );
 }
