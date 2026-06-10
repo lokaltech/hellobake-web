@@ -45,7 +45,6 @@ export async function deleteCategoryAction(id: string) {
     revalidatePath("/admin/categories");
     return { success: true };
   } catch (err: any) {
-    // Prisma throws P2003 if you try to delete a category that still has products tied to it
     if (err.code === "P2003") {
       return {
         error:

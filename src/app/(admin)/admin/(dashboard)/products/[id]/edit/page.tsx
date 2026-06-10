@@ -1,17 +1,36 @@
+// src/app/(admin)/admin/(dashboard)/products/[id]/edit/page.tsx
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 import ProductForm from "@/components/admin/products/ProductForm";
-import { createProductAction } from "../productsActions";
-import { PrismaClient } from "@prisma/client";
+import { updateProductAction } from "../../productsActions";
 
-const prisma = new PrismaClient();
+export default async function EditProductPage({
+  params,
+}: {
+  params: Promise<{ id: string }>; 
+}) {
+  const { id } = await params;
 
-export default async function NewProductPage() {
-  const categories = await prisma.category.findMany({
-    orderBy: { name: "asc" }, 
-  });
+  const [product, categories] = await Promise.all([
+    prisma.product.findUnique({
+      where: { id: id }, 
+      include: { category: true }, 
+    }),
+    prisma.category.findMany({
+      orderBy: { name: "asc" },
+    }),
+  ]);
+
+  if (!product) {
+    notFound();
+  }
+
+  const updateActionWithId = updateProductAction.bind(null, product.id);
 
   return (
     <div className="max-w-3xl mx-auto flex flex-col gap-8">
+      {/* Page Header */}
       <div className="flex items-center gap-4">
         <Link
           href="/admin/products"
@@ -23,19 +42,19 @@ export default async function NewProductPage() {
         </Link>
         <div>
           <h1 className="text-2xl font-bold text-[#2C1810]" style={{ fontFamily: "var(--font-playfair)" }}>
-            Add New Menu Item
+            Edit Menu Item
           </h1>
           <p className="text-sm text-[#6B4F44]" style={{ fontFamily: "var(--font-dm-sans)" }}>
-            Create a new pastry or cake for the public catalog.
+            Updating details for <span className="font-semibold text-[#2C1810]">{product.name}</span>.
           </p>
         </div>
       </div>
 
-      {/* Pass the categories down as a prop */}
       <ProductForm 
+        initialData={product}
         categories={categories} 
-        onSubmit={createProductAction} 
-        submitButtonText="Publish Product" 
+        onSubmit={updateActionWithId} 
+        submitButtonText="Save Changes" 
       />
     </div>
   );

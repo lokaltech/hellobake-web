@@ -2,6 +2,7 @@
 import { prisma } from "@/lib/prisma";
 import { deleteProductAction } from "./productsActions";
 import Link from "next/link";
+import DeleteProductButton from "@/components/admin/products/DeleteProductButton";
 
 export default async function ProductsPage() {
   const products = await prisma.product.findMany({
@@ -25,35 +26,57 @@ export default async function ProductsPage() {
         </Link>
       </div>
 
-      <div className="bg-white border border-[#F2E0DA] rounded-2xl shadow-sm">
+      <div className="bg-white border border-[#F2E0DA] rounded-2xl shadow-sm overflow-hidden">
         <table className="w-full text-left">
           <thead className="bg-[#FAF6F4] border-b border-[#F2E0DA] text-[11px] uppercase font-bold text-[#6B4F44]">
             <tr>
               <th className="py-3 px-6">Name</th>
               <th className="py-3 px-6">Price</th>
               <th className="py-3 px-6">Status</th>
+              <th className="py-3 px-6">Featured</th>
               <th className="py-3 px-6 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-[#F2E0DA]">
             {products.map((p) => (
-              <tr key={p.id}>
+              <tr key={p.id} className="hover:bg-[#FFFAF8] transition-colors">
                 <td className="py-4 px-6 font-semibold text-[#2C1810]">
-                  {p.name}
+                  {/* 1. Made the Name clickable with a hover state */}
+                  <Link 
+                    href={`/admin/products/${p.id}/edit`}
+                    className="hover:text-[#E07A99] transition-colors"
+                  >
+                    {p.name}
+                  </Link>
                 </td>
-                <td className="py-4 px-6">
+                <td className="py-4 px-6 text-[#6B4F44]">
                   Rp {(p.price / 1000).toLocaleString()}k
                 </td>
-                <td className="py-4 px-6">{p.isActive ? "Live" : "Hidden"}</td>
-                <td className="py-4 px-6 text-right">
-                  <form action={deleteProductAction.bind(null, p.id)}>
-                    <button
-                      type="submit"
-                      className="text-red-500 hover:underline text-sm"
+                <td className="py-4 px-6">
+                  <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
+                    p.isActive ? "bg-[#FDE8EE] text-[#E07A99]" : "bg-gray-100 text-gray-500"
+                  }`}>
+                    {p.isActive ? "Live" : "Hidden"}
+                  </span>
+                </td>
+                <td className="py-4 px-6">
+                  <span className={`px-2.5 py-1 text-xs font-semibold rounded-full ${
+                    p.isFeatured ? "bg-[#FDE8EE] text-[#E07A99]" : "bg-gray-100 text-gray-500"
+                  }`}>
+                    {p.isFeatured ? "Featured" : "Not Featured"}
+                  </span>
+                </td>
+                <td className="py-4 px-6">
+                  {/* 2. Added Flexbox to align Edit and Delete buttons cleanly */}
+                  <div className="flex items-center justify-end gap-4">
+                    <Link
+                      href={`/admin/products/${p.id}/edit`}
+                      className="text-[#6B4F44] hover:text-[#E07A99] text-sm font-medium transition-colors"
                     >
-                      Delete
-                    </button>
-                  </form>
+                      Edit
+                    </Link>
+                    <DeleteProductButton productId={p.id} productName={p.name} />
+                  </div>
                 </td>
               </tr>
             ))}

@@ -1,33 +1,58 @@
-// src/components/admin/products/ProductForm.tsx
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Product } from "@prisma/client";
+import { cn } from "@/lib/utils";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Category, Prisma } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { useState, useRef } from "react";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
+
+type ProductWithCategory = Prisma.ProductGetPayload<{
+  include: { category: true };
+}>;
 
 interface ProductFormProps {
-  initialData?: Product | null;
-  onSubmit: (
-    formData: FormData,
-  ) => Promise<{ error?: string; success?: boolean }>;
+  initialData?: ProductWithCategory | null;
+  categories: Category[];
+  onSubmit: (formData: FormData) => Promise<{ error?: string; success?: boolean }>;
   submitButtonText: string;
 }
 
 export default function ProductForm({
   initialData,
+  categories,
   onSubmit,
   submitButtonText,
 }: ProductFormProps) {
-  const [previewUrl, setPreviewUrl] = useState<string>(
-    initialData?.thumbnail || "",
-  );
+  const router = useRouter();
+  const [previewUrl, setPreviewUrl] = useState<string>(initialData?.thumbnail || "");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  // Handle local image preview generation
+  // --- NEW COMBOBOX STATE ---
+  const [open, setOpen] = useState(false);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<string>(
+    initialData?.categoryId || ""
+  );
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Create a temporary local URL to preview the image instantly
       const localUrl = URL.createObjectURL(file);
       setPreviewUrl(localUrl);
     }
@@ -35,8 +60,9 @@ export default function ProductForm({
 
   const removeImage = () => {
     setPreviewUrl("");
-    // We don't strictly need to clear the file input value here because
-    // if previewUrl is empty, we will block the form submission anyway.
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
   };
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -55,9 +81,12 @@ export default function ProductForm({
     try {
       const result = await onSubmit(formData);
 
-      // If the server action kicked back an error string, display it
       if (result?.error) {
         setErrorMsg(result.error);
+      } else {
+        // If successful, redirect and refresh right here!
+        router.push("/admin/products");
+        router.refresh();
       }
     } catch (error) {
       console.error("Form submission failed:", error);
@@ -66,7 +95,6 @@ export default function ProductForm({
       setLoading(false);
     }
   }
-
   return (
     <div className="bg-white border border-[#F2E0DA] rounded-2xl p-8 shadow-sm">
       {/* Alert Banner for Errors */}
@@ -105,6 +133,17 @@ export default function ProductForm({
           >
             Product Image
           </label>
+          
+          <input
+            type="file"
+            id="image-upload"
+            name="image"
+            accept="image/*"
+            className="hidden"
+            ref={fileInputRef} 
+            onChange={handleImageChange}
+          />
+          
           {previewUrl ? (
             <div className="relative w-48 h-48 rounded-xl overflow-hidden border border-[#F2E0DA]">
               <img
@@ -113,47 +152,23 @@ export default function ProductForm({
                 className="object-cover w-full h-full"
               />
               <button
-                type="button"
+                type="button" // (Good practice to add type="button" here so it doesn't accidentally submit the form)
                 onClick={removeImage}
                 className="absolute top-2 right-2 bg-white/90 p-1.5 rounded-lg text-red-500 hover:bg-white shadow-sm"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
               </button>
             </div>
           ) : (
-            <label className="border-2 border-dashed border-[#F2E0DA] rounded-xl p-6 hover:bg-[#FAF6F4] transition-colors relative cursor-pointer flex flex-col items-center justify-center text-center min-h-37.5">
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageChange}
-              />
+            <label 
+              htmlFor="image-upload" 
+              className="border-2 border-dashed border-[#F2E0DA] rounded-xl p-6 hover:bg-[#FAF6F4] transition-colors relative cursor-pointer flex flex-col items-center justify-center text-center min-h-37.5"
+            >
               <div className="flex items-center justify-center size-10 bg-[#FDE8EE] rounded-full mb-3 text-[#E07A99]">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline points="17 8 12 3 7 8" />
                   <line x1="12" y1="3" x2="12" y2="15" />
@@ -202,16 +217,57 @@ export default function ProductForm({
             <label className="text-xs font-semibold text-[#2C1810] tracking-wide uppercase">
               Category
             </label>
-            <select
-              name="category"
-              defaultValue={initialData?.category || "Pastries"}
-              className="w-full px-4 py-3 bg-[#FFFAF8] border border-[#F2E0DA] rounded-xl text-sm text-[#2C1810] placeholder:text-[#C8B4AC] focus:outline-none focus:border-[#E07A99]"
-            >
-              <option value="Cakes">Cakes</option>
-              <option value="Pastries">Pastries</option>
-              <option value="Tarts">Tarts</option>
-              <option value="Specials">Specials</option>
-            </select>
+            <input 
+              type="hidden" 
+              name="categoryId" 
+              value={selectedCategoryId} 
+              required 
+            />
+
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger
+                className={cn(
+                  buttonVariants({ variant: "outline" }), 
+                  "w-full justify-between px-4 py-6 bg-[#FFFAF8] border-[#F2E0DA] rounded-xl text-sm text-[#2C1810] hover:bg-[#FFFAF8] font-normal hover:border-[#E07A99] transition-colors"
+                )}
+                role="combobox"
+                aria-expanded={open}
+              >
+                {selectedCategoryId
+                  ? categories.find((cat) => cat.id === selectedCategoryId)?.name
+                  : "Select a category..."}
+                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+              </PopoverTrigger>
+              <PopoverContent className="w-full p-0 border-[#F2E0DA] rounded-xl shadow-md">
+                <Command>
+                  <CommandInput placeholder="Search category..." className="h-9" />
+                  <CommandList>
+                    <CommandEmpty>No category found.</CommandEmpty>
+                    <CommandGroup>
+                      {categories.map((cat) => (
+                        <CommandItem
+                          key={cat.id}
+                          value={cat.name} 
+                          onSelect={() => {
+                            setSelectedCategoryId(cat.id === selectedCategoryId ? "" : cat.id);
+                            setOpen(false);
+                          }}
+                          className="cursor-pointer"
+                        >
+                          <Check
+                            className={cn(
+                              "mr-2 h-4 w-4 text-[#E07A99]",
+                              selectedCategoryId === cat.id ? "opacity-100" : "opacity-0"
+                            )}
+                          />
+                          {cat.name}
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
           </div>
 
           <div className="flex flex-col gap-1.5">

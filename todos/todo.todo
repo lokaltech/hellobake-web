@@ -1,0 +1,50 @@
+Database:
+    ✔ research supabase @done(26-05-31 10:35)
+    ✔ connect next project to supabase @done(26-05-31 10:35)
+    
+Admin Dashboard:
+    ✔ should we split the admin dashboard with the main project? @done(26-05-31 10:39)
+    ✔ create a single admin user @done(26-05-31 13:58)
+    ✔ layout for admin dashboard @done(26-05-31 13:58)
+    ✔ delete function  also deletes thumbnail from uploadthing storage @started(26-06-09 20:35) @done(26-06-09 20:43) @lasted(8m3s)
+
+    upload product thumbnail with uploadthing:
+        ✔ preview thumbnail before upload @done(26-06-08 18:16)
+        ✔ upload on save in the form @done(26-06-08 18:16)
+
+    admins should be able to:
+        ✔ manage product categories @done(26-06-08 18:16)
+        ✔ manage products @done(26-06-08 18:16)
+        ☐ manage socials
+        
+Home Page:
+    ✔ call products from database @started(26-06-09 20:26) @done(26-06-09 20:35) @lasted(9m2s)
+    ✔ featured menu section should be randomized every time the page is loaded @started(26-06-09 21:25) @done(26-06-09 21:31) @lasted(6m48s)
+    ☐ floating badge on the hero product should have cute animations.
+
+Menu Page:
+    ✔ front end @started(26-06-09 20:48) @done(26-06-09 21:19) @lasted(31m25s)
+    ✔ call products from database @started(26-06-09 20:48) @done(26-06-09 21:19) @lasted(31m23s)
+    ✔ search filter by category @done(26-06-09 21:19)
+    ✔ search filter by name @done(26-06-09 21:19)
+    ✔ pagination @done(26-06-09 21:19)
+
+Add To Cart Functionality:
+    ✔ add to cart button on menu page @done(26-06-09 21:44)
+    ✔ add to cart button on home page featured section @done(26-06-09 22:05)
+    ✔ cart drawer with list of items in the cart @done(26-06-09 22:05)
+    ✔ update quantity of items in the cart @done(26-06-09 22:05)
+    ✔ remove items from the cart @done(26-06-09 22:05)
+    ✔ persist cart items in local storage @done(26-06-09 22:05)
+
+Order Functionality:
+    ✔ order should redirect to whatsapp @done(26-06-09 22:36)
+    ✔ order summary should be pre-filled in the whatsapp message (messages will be constructed based on the items in the cart) @done(26-06-09 22:36)
+    ✔ order summary should include product name, quantity, and total price @done(26-06-09 22:36)
+    ✔ order summary should be formatted in a user-friendly way @done(26-06-09 22:36)
+    ✔ add emojis to the whatsapp message to make it more fun and engaging. @done(26-06-09 22:40)
+    ✔ the regular "Order" button should only order for that one specific product, while the cart drawer's "Order" button should order for all items in the cart. @done(26-06-10 07:42)
+
+About Page:
+    ✔ front end @done(26-06-10 07:42)
+    ☐ picture on the hero section should be a carousel of pictures from the bakery, with smooth fade in/out animations.

@@ -1,18 +1,11 @@
 // components/Footer.tsx
 import Link from "next/link";
 
-const exploreLinks = [
-  { label: "Our Menu", href: "/menu" },
-  { label: "Custom Cakes", href: "/menu/custom" },
-  { label: "Seasonal Specials", href: "/menu/specials" },
-  { label: "Gift Boxes", href: "/menu/gifts" },
-];
+const exploreLinks = [{ label: "Our Menu", href: "/menu" }];
 
 const companyLinks = [
   { label: "About Us", href: "/about" },
-  { label: "Our Story", href: "/about/story" },
   { label: "Contact", href: "/contact" },
-  { label: "Careers", href: "/careers" },
 ];
 
 const hours = [
@@ -241,7 +234,7 @@ export default function Footer() {
               className="text-sm text-[#E07A99] font-medium hover:text-[#F0A0BC] transition-colors duration-200"
               style={{ fontFamily: "var(--font-dm-sans)" }}
             >
-              +62 851 2111 8121
+              +62 812 9029 8121
             </a>
           </div>
         </div>
