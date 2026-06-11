@@ -2,6 +2,7 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { deleteCategoryAction } from "./categoriesActions";
+import DeleteCategoryButton from "@/components/admin/categories/DeleteCategoryButton";
 
 export default async function CategoriesPage() {
   // Fetch categories and count the related products!
@@ -82,14 +83,10 @@ export default async function CategoriesPage() {
                       </span>
                     </td>
                     <td className="py-4 px-6 text-right">
-                      <form action={deleteCategoryAction.bind(null, c.id)}>
-                        <button
-                          type="submit"
-                          className="text-red-500 hover:text-red-700 font-medium text-sm transition-colors"
-                        >
-                          Delete
-                        </button>
-                      </form>
+                      <DeleteCategoryButton
+                        categoryId={c.id}
+                        categoryName={c.name}
+                      />
                     </td>
                   </tr>
                 ))

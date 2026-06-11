@@ -48,3 +48,10 @@ Order Functionality:
 About Page:
     ✔ front end @done(26-06-10 07:42)
     ☐ picture on the hero section should be a carousel of pictures from the bakery, with smooth fade in/out animations.
+
+Up to Production:
+    ☐ deploy on vercel
+    ☐ connect to production database
+    ☐ set up environment variables for production
+    ☐ test everything on production
+    ☐ uploadthing production configuration

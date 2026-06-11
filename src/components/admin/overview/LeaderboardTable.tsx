@@ -1,8 +1,12 @@
 // src/components/admin/overview/LeaderboardTable.tsx
-import { Product } from "@prisma/client";
+import { Prisma } from "@prisma/client";
+
+type ProductWithCategory = Prisma.ProductGetPayload<{
+  include: { category: true };
+}>;
 
 interface LeaderboardTableProps {
-  products: Product[];
+  products: ProductWithCategory[];
 }
 
 export default function LeaderboardTable({ products }: LeaderboardTableProps) {
@@ -69,8 +73,9 @@ export default function LeaderboardTable({ products }: LeaderboardTableProps) {
                       )}
                     </div>
                   </td>
+                  {/* 🟢 TypeScript now knows product.category exists! */}
                   <td className="py-4 px-6 text-[#6B4F44]">
-                    {product.category}
+                    {product.category?.name || "Uncategorized"}
                   </td>
                   <td className="py-4 px-6 font-mono">
                     Rp {(product.price / 1000).toLocaleString()}k

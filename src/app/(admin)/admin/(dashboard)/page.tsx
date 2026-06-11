@@ -9,6 +9,9 @@ export default async function AdminDashboardOverview() {
     orderBy: {
       clicks: "desc",
     },
+    include: {
+      category: true,
+    },
   });
 
   const totalProducts = products.length;
