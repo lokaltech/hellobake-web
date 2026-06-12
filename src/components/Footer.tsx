@@ -1,4 +1,5 @@
 // components/Footer.tsx
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
 const exploreLinks = [{ label: "Our Menu", href: "/menu" }];
@@ -14,74 +15,82 @@ const hours = [
   { day: "Sunday", time: "09:00 – 18:00", highlight: true },
 ];
 
-const socialLinks = [
-  {
-    href: "https://instagram.com/hellobake.id",
-    label: "Instagram",
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-        <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
-        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-      </svg>
-    ),
-  },
-  {
-    href: "https://tiktok.com/@hellobake.id",
-    label: "TikTok",
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M9 12a4 4 0 104 4V4a5 5 0 005 5" />
-      </svg>
-    ),
-  },
-  {
-    href: "https://wa.me/6281234567890",
-    label: "WhatsApp",
-    icon: (
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="15"
-        height="15"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
-      </svg>
-    ),
-  },
-];
-
 const bottomLinks = [
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms of Service", href: "/terms" },
 ];
 
-export default function Footer() {
+export default async function Footer() {
+  const settings = await prisma.storeSettings.findUnique({
+    where: { id: "default" },
+  });
+
+  const waNumber = settings?.whatsappNumber || "6285121118121";
+  const igUrl = settings?.instagramUrl || "https://instagram.com/hellobake.id";
+  const tiktokUrl = settings?.tiktokUrl || "https://tiktok.com/@hellobake.id";
+
+  const socialLinks = [
+    {
+      href: igUrl,
+      label: "Instagram",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+          <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
+          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
+        </svg>
+      ),
+    },
+    {
+      href: tiktokUrl,
+      label: "TikTok",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M9 12a4 4 0 104 4V4a5 5 0 005 5" />
+        </svg>
+      ),
+    },
+    {
+      href: `https://wa.me/${waNumber}`,
+      label: "WhatsApp",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z" />
+        </svg>
+      ),
+    },
+  ];
+
   return (
     <footer className="bg-[#2C1810] text-[#F5E6E0]">
       {/* ── Main grid ── */}
@@ -222,6 +231,7 @@ export default function Footer() {
             ))}
           </div>
 
+          {/* DYNAMIC WHATSAPP BOX */}
           <div className="bg-[#3D2218] border border-[#4E2E20] rounded-xl px-4 py-3.5">
             <p
               className="text-xs text-[#A07060] mb-1"
@@ -230,11 +240,12 @@ export default function Footer() {
               Order via WhatsApp
             </p>
             <a
-              href="https://wa.me/6285121118121"
+              href={`https://wa.me/${waNumber}`}
               className="text-sm text-[#E07A99] font-medium hover:text-[#F0A0BC] transition-colors duration-200"
               style={{ fontFamily: "var(--font-dm-sans)" }}
             >
-              +62 812 9029 8121
+              +{waNumber.slice(0, 2)} {waNumber.slice(2, 5)}{" "}
+              {waNumber.slice(5, 9)} {waNumber.slice(9)}
             </a>
           </div>
         </div>

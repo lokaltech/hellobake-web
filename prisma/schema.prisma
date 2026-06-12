@@ -43,3 +43,11 @@ model Category {
 
   @@map("categories")
 }
+
+model StoreSettings {
+  id             String   @id @default("default")
+  whatsappNumber String   @default("6285121118121")
+  instagramUrl   String?
+  tiktokUrl      String?
+  updatedAt      DateTime @updatedAt
+}

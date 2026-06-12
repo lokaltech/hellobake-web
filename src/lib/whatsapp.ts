@@ -1,22 +1,16 @@
 // lib/whatsapp.ts
 import { CartItem } from "@/context/CartContext";
 
-export function getWhatsAppOrderLink(cartItems: CartItem[]): string {
-  // const ADMIN_PHONE = "6281290298121";
-  const ADMIN_PHONE = "6285710338981";
-
-  const emoCook = "\u{1F469}\u{200D}\u{1F373}"; // 👩‍🍳
-  const emoSpar = "\u{2728}"; // ✨
-  const emoHeart = "\u{2764}\u{FE0F}"; // ❤️
-  const emoCake = "\u{1F370}"; // 🍰
-
+export function getWhatsAppOrderLink(
+  cartItems: CartItem[],
+  adminPhone: string,
+): string {
   // Case A: Cart is empty -> Generate a warm, friendly default message
   if (!cartItems || cartItems.length === 0) {
     const defaultText =
       "Hi HelloBake! 👩‍🍳 I'm looking at your menu today and would love to know what fresh pastries you have available!";
 
-    // 🟢 CHANGED: Using direct api.whatsapp.com endpoint
-    return `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(defaultText)}`;
+    return `https://api.whatsapp.com/send?phone=${adminPhone}&text=${encodeURIComponent(defaultText)}`;
   }
 
   // Case B: Cart has goodies -> Format a clean itemized receipt
@@ -33,18 +27,15 @@ export function getWhatsAppOrderLink(cartItems: CartItem[]): string {
   message += `\n✨ *Total Price:* Rp ${grandTotal.toLocaleString()}k\n`;
   message += `\nCan you please confirm my order? Thank you! ❤️`;
 
-  // 🟢 CHANGED: Using direct api.whatsapp.com endpoint to preserve emoji bytes
-  return `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(message)}`;
+  return `https://api.whatsapp.com/send?phone=${adminPhone}&text=${encodeURIComponent(message)}`;
 }
 
 export function getWhatsAppContactLink(
   name: string,
   type: string,
   message: string,
+  adminPhone: string, // Passed in dynamically now
 ): string {
-  const ADMIN_PHONE = "6285710338981"; // Your WhatsApp Number
-
-  // Emojis
   const emoWave = "\u{1F44B}"; // 👋
   const emoPin = "\u{1F4CC}"; // 📌
   const emoMsg = "\u{1F4AC}"; // 💬
@@ -54,5 +45,5 @@ export function getWhatsAppContactLink(
   text += `${emoPin} *Inquiry Type:* ${type}\n`;
   text += `${emoMsg} *Message:*\n${message}\n`;
 
-  return `https://api.whatsapp.com/send?phone=${ADMIN_PHONE}&text=${encodeURIComponent(text)}`;
+  return `https://api.whatsapp.com/send?phone=${adminPhone}&text=${encodeURIComponent(text)}`;
 }
