@@ -1,5 +1,10 @@
-// components/contact/ContactInfo.tsx
-export default function ContactInfo() {
+interface ContactInfoProps {
+  whatsappNumber: string;
+}
+
+export default function ContactInfo({ whatsappNumber }: ContactInfoProps) {
+  const formattedPhone = `+${whatsappNumber.slice(0, 2)} ${whatsappNumber.slice(2, 5)} ${whatsappNumber.slice(5, 9)} ${whatsappNumber.slice(9)}`;
+
   return (
     <div className="flex flex-col gap-8 bg-white border border-[#F2E0DA] rounded-3xl p-8 shadow-sm h-full">
       <h3
@@ -51,7 +56,9 @@ export default function ContactInfo() {
               className="text-[#6B4F44] text-sm leading-relaxed"
               style={{ fontFamily: "var(--font-dm-sans)" }}
             >
-              Mon - Sat: 07:00 AM - 08:00 PM
+              Mon - Fri: 07:00 AM - 08:00 PM
+              <br />
+              Sat: 08:00 AM - 06:00 PM
               <br />
               Sun: 08:00 AM - 05:00 PM
             </p>
@@ -74,7 +81,7 @@ export default function ContactInfo() {
               className="text-[#6B4F44] text-sm leading-relaxed"
               style={{ fontFamily: "var(--font-dm-sans)" }}
             >
-              +62 857 1033 8981
+              {formattedPhone}
               <br />
               <span className="text-xs italic mt-1 block">
                 Fastest response time

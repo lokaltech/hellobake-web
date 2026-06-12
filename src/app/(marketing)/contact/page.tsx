@@ -25,7 +25,7 @@ export default async function ContactPage() {
 
       <div className="max-w-6xl mx-auto px-6 mt-16 flex flex-col lg:flex-row gap-12 lg:gap-20">
         <div className="w-full lg:w-1/3">
-          <ContactInfo />
+          <ContactInfo whatsappNumber={whatsappNumber} />
         </div>
 
         <div className="w-full lg:w-2/3">

@@ -11,7 +11,7 @@ const companyLinks = [
 
 const hours = [
   { day: "Mon – Fri", time: "08:00 – 20:00", highlight: false },
-  { day: "Saturday", time: "08:00 – 22:00", highlight: false },
+  { day: "Saturday", time: "08:00 – 18:00", highlight: false },
   { day: "Sunday", time: "09:00 – 18:00", highlight: true },
 ];
 
