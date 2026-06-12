@@ -4,7 +4,11 @@ import Link from "next/link";
 import { getWhatsAppOrderLink } from "@/lib/whatsapp";
 import { useCart } from "@/context/CartContext";
 
-export default function HeroSection() {
+interface HeroSectionProps {
+  whatsappNumber: string;
+}
+
+export default function HeroSection({ whatsappNumber }: HeroSectionProps) {
   const avatarUrls = [
     "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80", // Woman smiling
     "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&w=150&h=150&q=80", // Man smiling
@@ -13,7 +17,7 @@ export default function HeroSection() {
   ];
 
   const { cart } = useCart();
-  const currentWhatsAppUrl = getWhatsAppOrderLink(cart);
+  const currentWhatsAppUrl = getWhatsAppOrderLink(cart, whatsappNumber);
 
   return (
     // Added bg-[#FFFAF8] here

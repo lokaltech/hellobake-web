@@ -11,10 +11,12 @@ interface InstantOrderButtonProps {
     price: number;
     thumbnail: string;
   };
+  whatsappNumber: string; // Optional prop for future flexibility
 }
 
 export default function InstantOrderButton({
   product,
+  whatsappNumber,
 }: InstantOrderButtonProps) {
   const { cart, addToCart } = useCart();
 
@@ -31,7 +33,7 @@ export default function InstantOrderButton({
     }
 
     // 2. Generate custom WhatsApp receipt link and redirect user
-    const targetUrl = getWhatsAppOrderLink(finalCart);
+    const targetUrl = getWhatsAppOrderLink(finalCart, whatsappNumber);
     window.open(targetUrl, "_blank", "noopener,noreferrer");
   };
 

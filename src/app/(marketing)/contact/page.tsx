@@ -3,6 +3,7 @@
 import ContactForm from "@/components/contact/ContactForm";
 import ContactHero from "@/components/contact/ContactHero";
 import ContactInfo from "@/components/contact/ContactInfo";
+import { prisma } from "@/lib/prisma";
 
 export const metadata = {
   title: "Contact Us | HelloBake",
@@ -10,7 +11,14 @@ export const metadata = {
     "Get in touch with HelloBake for custom orders, catering, or general questions.",
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await prisma.storeSettings.findUnique({
+    where: { id: "default" },
+  });
+
+  // Provide a reliable backup number if database table row hasn't been seeded yet
+  const whatsappNumber = settings?.whatsappNumber || "6285121118121";
+
   return (
     <main className="min-h-screen bg-[#FFFAF8] pb-20">
       <ContactHero />
@@ -21,7 +29,7 @@ export default function ContactPage() {
         </div>
 
         <div className="w-full lg:w-2/3">
-          <ContactForm />
+          <ContactForm whatsappNumber={whatsappNumber} />{" "}
         </div>
       </div>
     </main>

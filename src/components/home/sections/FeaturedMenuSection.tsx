@@ -21,6 +21,13 @@ export default async function FeaturedMenuSection() {
     .sort(() => 0.5 - Math.random())
     .slice(0, 4);
 
+  const settings = await prisma.storeSettings.findUnique({
+    where: { id: "default" },
+  });
+
+  // Provide a reliable backup number if database table row hasn't been seeded yet
+  const whatsappNumber = settings?.whatsappNumber || "6285121118121";
+
   return (
     <section className="py-20 px-6 bg-white border-y border-[#F2E0DA]">
       <div className="max-w-6xl mx-auto">
@@ -95,7 +102,10 @@ export default async function FeaturedMenuSection() {
 
                   <div className="grid grid-cols-2 gap-2">
                     <AddToCartButton product={item} />
-                    <InstantOrderButton product={item} />
+                    <InstantOrderButton
+                      product={item}
+                      whatsappNumber={whatsappNumber}
+                    />
                   </div>
                 </div>
               </div>

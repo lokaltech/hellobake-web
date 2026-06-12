@@ -9,7 +9,6 @@ import CartDrawer from "@/components/menu/CartDrawer";
 import Image from "next/image";
 import { getWhatsAppOrderLink } from "@/lib/whatsapp";
 
-// Keeping the base structure clean outside the component
 const baseNavLinks = [
   { label: "Menu", href: "/menu" },
   { label: "Order", href: "/order" },
@@ -17,12 +16,17 @@ const baseNavLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
-export default function Navbar() {
+interface NavbarProps {
+  whatsappNumber: string;
+}
+
+export default function Navbar({ whatsappNumber }: NavbarProps) {
   const pathname = usePathname();
 
-  // 🟢 Combined useCart hooks into a single optimized invocation
   const { cart, cartCount } = useCart();
-  const currentWhatsAppUrl = getWhatsAppOrderLink(cart);
+
+  // Generate the WhatsApp URL based on the current cart contents
+  const currentWhatsAppUrl = getWhatsAppOrderLink(cart, whatsappNumber);
 
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -42,8 +46,7 @@ export default function Navbar() {
     };
   }, [menuOpen, cartOpen]);
 
-  // 🟢 Map links dynamically inside the render method to pass your live WhatsApp URL
-  // and flag it as an external destination
+  // Map links dynamically inside the render method to pass your live WhatsApp URL
   const navLinks = baseNavLinks.map((link) => {
     if (link.label === "Order") {
       return { ...link, href: currentWhatsAppUrl, isExternal: true };
@@ -85,7 +88,6 @@ export default function Navbar() {
             {navLinks.map(({ label, href, isExternal }) => {
               const isActive = pathname === href;
               return (
-                /* 🟢 CHANGED: Using label as the key to prevent complete node rebuilds when cart updates */
                 <li key={label}>
                   <Link
                     href={href}
@@ -222,7 +224,11 @@ export default function Navbar() {
         </div>
       </aside>
 
-      <CartDrawer isOpen={cartOpen} onClose={() => setCartOpen(false)} />
+      <CartDrawer
+        isOpen={cartOpen}
+        onClose={() => setCartOpen(false)}
+        whatsAppNumber={whatsappNumber}
+      />
     </>
   );
 }

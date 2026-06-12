@@ -4,7 +4,12 @@
 import { useState } from "react";
 import { getWhatsAppContactLink } from "@/lib/whatsapp";
 
-export default function ContactForm() {
+// 🟢 Define the interface for props
+interface ContactFormProps {
+  whatsappNumber: string;
+}
+
+export default function ContactForm({ whatsappNumber }: ContactFormProps) {
   const [formData, setFormData] = useState({
     name: "",
     type: "General Question",
@@ -22,11 +27,12 @@ export default function ContactForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Generate the URL based on state
+    // 🟢 Pass whatsappNumber as the 4th argument here
     const targetUrl = getWhatsAppContactLink(
       formData.name,
       formData.type,
       formData.message,
+      whatsappNumber,
     );
 
     // Open WhatsApp in a new tab securely
@@ -86,7 +92,6 @@ export default function ContactForm() {
               <option value="Event Catering">Event Catering</option>
               <option value="Feedback">Feedback / Suggestions</option>
             </select>
-            {/* Custom dropdown arrow for better aesthetics */}
             <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-[#6B4F44]">
               ▼
             </div>

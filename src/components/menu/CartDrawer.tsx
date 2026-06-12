@@ -8,9 +8,14 @@ import { getWhatsAppOrderLink } from "@/lib/whatsapp";
 interface CartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
+  whatsAppNumber: string;
 }
 
-export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
+export default function CartDrawer({
+  isOpen,
+  onClose,
+  whatsAppNumber,
+}: CartDrawerProps) {
   const pathname = usePathname();
   const { cart, cartCount, removeFromCart, clearCart } = useCart();
 
@@ -175,7 +180,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 onClick={() => {
                   onClose();
                   window.open(
-                    getWhatsAppOrderLink(cart),
+                    getWhatsAppOrderLink(cart, whatsAppNumber), // Pass the cart and WhatsApp number to generate the link
                     "_blank",
                     "noopener,noreferrer",
                   );
